@@ -35,9 +35,9 @@ app.use(cors({
 }));
 
 
-app.get('/', (req, res) => {
-  res.send('Server is running...')
-})
+// app.get('/', (req, res) => {
+//   res.send('Server is running...')
+// })
 
 // Routes
 app.get('/keys/paypal', (req, res) => {
@@ -50,11 +50,22 @@ app.use('/users', userRouter);
 app.use('/orders', orderRouter);
 
 
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, '/frontend/build')));
-app.get('*', (req, res) =>
-  res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
-);  
+const __dirname = path.resolve(); 
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')));
+
+  app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
+  });
+
+} else {
+  app.get('/',(req, res)=>{
+      res.send('Api is running...')
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
