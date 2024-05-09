@@ -20,10 +20,20 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Enable CORS globally 
+
 app.use(cors({
-  origin: `${process.env.FRONTEND_URL}`,
-  credentials: true }
-));
+  origin: function (origin, callback) {
+   
+    if (!origin || origin === process.env.FRONTEND_URL) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept'
+}));
+
 
 app.get('/', (req, res) => {
   res.send('Server is running...')
