@@ -50,6 +50,8 @@ app.use('/users', userRouter);
 app.use('/orders', orderRouter);
 
 
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
